@@ -61,8 +61,14 @@ class Schedule extends \WP_Widget {
 
         update_option('wgom_schedule_db_version', Schedule::DB_VERSION);
     }
+
+    public function plugin_remove() {
+    }
 }
 
 add_action('widgets_init', create_function('', 'return register_widget("WGOM\\Schedule");'));
+
+register_activation_hook(__FILE__, 'WGOM\\Schedule::plugin_install');
+register_deactivation_hook(__FILE__, 'WGOM\\Schedule::plugin_remove');
 
 ?>

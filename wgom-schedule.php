@@ -22,6 +22,15 @@ class Schedule extends \WP_Widget {
         parent::__construct('wgom-schedule', 'WGOM Schedule', $widget_ops, $control_ops);
     }
 
+    public function form($instance) {
+    }
+
+    public function update($new_instance, $old_instance) {
+    }
+
+    public function widget($args, $instance) {
+    }
+
     /* Method to handle plugin activation. */
     public function plugin_install() {
         $schedule_db_version = intval(get_option('wgom_schedule_db_version'));

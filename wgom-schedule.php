@@ -49,6 +49,8 @@ class Schedule extends \WP_Widget {
 
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($table_sql);
+
+        update_option('wgom_schedule_db_version', Schedule::DB_VERSION);
     }
 }
 

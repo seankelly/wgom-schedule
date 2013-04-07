@@ -17,7 +17,7 @@ class Schedule extends \WP_Widget {
             'classname' => 'WGOM Schedule',
             'description' => 'Handle team schedules'
         );
-        $control_ops = array('width' => 400, 'height' => 350);
+        $control_ops = array('width' => 350, 'height' => 450);
 
         parent::__construct('wgom-schedule', 'WGOM Schedule', $widget_ops, $control_ops);
     }

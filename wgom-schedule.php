@@ -61,10 +61,10 @@ class Schedule extends \WP_Widget {
         $table_sql = "
             CREATE TABLE $table (
                 gametime datetime NOT NULL,
-                team varchar NOT NULL,
-                opponent varchar NOT NULL,
+                team varchar(64) NOT NULL,
+                opponent varchar(64) NOT NULL,
                 home boolean NOT NULL,
-                tv varchar NOT NULL,
+                tv varchar(256) NOT NULL,
                 KEY ${table}_team_idx (team)
             );
         ";

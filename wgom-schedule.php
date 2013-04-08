@@ -63,6 +63,10 @@ class Schedule extends \WP_Widget {
     }
 
     public function plugin_remove() {
+        global $wpdb;
+
+        $table = $wpdb->prefix . 'schedule';
+        $wpdb->query("DROP TABLE IF EXISTS $table");
     }
 }
 

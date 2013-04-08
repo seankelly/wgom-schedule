@@ -23,6 +23,19 @@ class Schedule extends \WP_Widget {
     }
 
     public function form($instance) {
+        $defaults = array(
+            'title' => 'Team Schedule',
+            'schedule' => ''
+        );
+
+        $instance = wp_parse_args((array) $instance, $defaults);
+?>
+<p>
+    <label for="<?php echo $this->get_field_id('title'); ?>">Title</label>
+    <input id="<?php echo $this->get_field_id('title'); ?>" class="widefat" name="<?php echo $this->get_field_name('title'); ?>" value="<?php echo $instance['title']; ?>" />
+</p>
+<textarea id="<?php echo $this->get_field_id('schedule'); ?>" name="<?php echo $this->get_field_name('schedule'); ?>" class="widefat" cols="15" rows="20"><?php echo esc_textarea($instance['schedule']); ?></textarea>
+<?php
     }
 
     public function update($new_instance, $old_instance) {

@@ -71,6 +71,19 @@ class Schedule extends \WP_Widget {
     }
 
     public function widget($args, $instance) {
+        $title = apply_filters('widget_title', $instance['title']);
+        $content = $this->generate($instance);
+
+        extract($args, EXTR_SKIP);
+        echo $before_widget;
+        if ($title) {
+            echo $before_title . $title . $after_title;
+        }
+        echo $content;
+        echo $after_widget;
+    }
+
+    private function generate($instance) {
     }
 
     /* Method to handle plugin activation. */

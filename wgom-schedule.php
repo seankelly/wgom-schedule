@@ -45,6 +45,29 @@ class Schedule extends \WP_Widget {
     }
 
     public function update($new_instance, $old_instance) {
+        $instance = $old_instance;
+        $options = get_option(Schedule::OPTION_NAME, array());
+
+        $team = strip_tags($new_instance['team']);
+        if ($team === '')
+            return;
+
+        $title = strip_tags($new_instance['title']);
+        $schedule = strip_tags($new_instance['schedule']);
+
+        $instance['title'] = $title;
+        $instance['team'] = $team;
+        $instance['schedule'] = $schedule;
+
+        $options[$team] = array(
+            'title' => $title,
+            'team' => $team,
+            'schedule' => $schedule
+        );
+
+        update_option(Schedule::OPTION_NAME, $options);
+
+        return $instance;
     }
 
     public function widget($args, $instance) {

@@ -83,7 +83,25 @@ class Schedule extends \WP_Widget {
         echo $after_widget;
     }
 
+    // Find all games from today onward, with a max limit of five games.
     private function generate($instance) {
+        global $wpdb;
+
+        $team = $instance['team'];
+        $today = date('c', mktime(0, 0, 0));
+        $table = $wpdb->prefix . 'schedule';
+        $get_games_sql = "SELECT gametime,team,opponent,home,tv FROM $table WHERE team = %s AND gametime > %s LIMIT 5";
+
+        $prepared_sql = $wpdb->prepare($get_games_sql, $team, $today);
+        $games = $wpdb->get_results($prepared_sql, 'ARRAY_N');
+        $content = '';
+        foreach ($games as $game) {
+            $opponent = $game[2];
+            $tv = $game[4];
+            $content .= "<li>DATE $opponent (TIME) $tv</li>";
+        }
+
+        return $content;
     }
 
     /* Method to handle plugin activation. */

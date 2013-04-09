@@ -11,6 +11,7 @@ namespace WGOM;
 
 class Schedule extends \WP_Widget {
     const DB_VERSION = 1;
+    const DB_OPTION_NAME = 'wgom_schedule_db_version';
 
     public function __construct() {
         $widget_ops = array(
@@ -46,7 +47,7 @@ class Schedule extends \WP_Widget {
 
     /* Method to handle plugin activation. */
     public function plugin_install() {
-        $schedule_db_version = intval(get_option('wgom_schedule_db_version'));
+        $schedule_db_version = intval(get_option(Schedule::DB_OPTION_NAME));
 
         if (Schedule::DB_VERSION !== $schedule_db_version) {
             Schedule::update_table();
@@ -72,7 +73,7 @@ class Schedule extends \WP_Widget {
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($table_sql);
 
-        update_option('wgom_schedule_db_version', Schedule::DB_VERSION);
+        update_option(Schedule::DB_OPTION_NAME, Schedule::DB_VERSION);
     }
 
     public function plugin_remove() {

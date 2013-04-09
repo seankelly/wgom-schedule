@@ -10,6 +10,7 @@ Author URI:
 namespace WGOM;
 
 class Schedule extends \WP_Widget {
+    const OPTION_NAME = 'wgom_schedule';
     const DB_VERSION = 1;
     const DB_OPTION_NAME = 'wgom_schedule_db_version';
 
@@ -81,6 +82,7 @@ class Schedule extends \WP_Widget {
 
         $table = $wpdb->prefix . 'schedule';
         $wpdb->query("DROP TABLE IF EXISTS $table");
+        delete_option(Schedule::DB_OPTION_NAME);
     }
 }
 

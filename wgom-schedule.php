@@ -107,6 +107,38 @@ class Schedule extends \WP_Widget {
         return $content;
     }
 
+    private function parse_schedule($csv_schedule) {
+        $schedule = array();
+
+        /*
+         * Input format:
+         *  YYYY-MM-DD,HH:MM,Opponent,Home,TV channels
+         */
+        $rows = str_getcsv($csv_schedule, "\n");
+        foreach ($rows as &$row) {
+            $len = strlen($row);
+            if ($len === 0) {
+                continue;
+            }
+
+            $fields = str_getcsv($row);
+            // Check if the time ends with AM or PM. Append PM to the time if
+            // nothing is found.
+            $time = trim(strtoupper($fields[1]));
+            $ending = substr($time, -2);
+            if ($ending != 'AM' && $ending != 'PM') {
+                $time .= ' PM';
+            }
+            $gametime = strtotime($fields[0] . ' ' . $time);
+
+            $opponent = $fields[2];
+            $home = (bool) $fields[3];
+            $tv = $fields[4];
+
+            $schedule[] = array($gametime, $opponent, $home, $tv);
+        }
+    }
+
     public function plugin_remove() {
         delete_option(Schedule::OPTION_NAME);
     }

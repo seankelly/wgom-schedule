@@ -85,20 +85,25 @@ class Schedule extends \WP_Widget {
 
     // Find all games from today onward, with a max limit of five games.
     private function generate($instance) {
-        global $wpdb;
-
-        $team = $instance['team'];
-        $today = date('c', mktime(0, 0, 0));
-        $table = $wpdb->prefix . 'schedule';
-        $get_games_sql = "SELECT gametime,team,opponent,home,tv FROM $table WHERE team = %s AND gametime > %s LIMIT 5";
-
-        $prepared_sql = $wpdb->prepare($get_games_sql, $team, $today);
-        $games = $wpdb->get_results($prepared_sql, 'ARRAY_N');
+        $schedule = $instance['schedule'];
         $content = '';
-        foreach ($games as $game) {
+        $found = 0;
+        // Number of games in the schedule to show.
+        $limit = 5;
+        $today = mktime(0, 0, 0);
+        foreach ($schedule as $game) {
+            if ($today > $game[0]) {
+                continue;
+            }
+
+            $date = getdate($game[0]);
+            $gamedate = $date['mon'] . '/' . $date['mday'];
+            $gametime = $date['hours'] . ':' . $date['minutes'];
             $opponent = $game[2];
             $tv = $game[4];
-            $content .= "<li>DATE $opponent (TIME) $tv</li>";
+            $content .= "<li>$gamedate $opponent ($gametime) $tv</li>";
+
+            $limit++;
         }
 
         return $content;

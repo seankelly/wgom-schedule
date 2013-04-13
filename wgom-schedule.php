@@ -11,8 +11,6 @@ namespace WGOM;
 
 class Schedule extends \WP_Widget {
     const OPTION_NAME = 'wgom_schedule';
-    const DB_VERSION = 1;
-    const DB_OPTION_NAME = 'wgom_schedule_db_version';
 
     public function __construct() {
         $widget_ops = array(
@@ -109,49 +107,13 @@ class Schedule extends \WP_Widget {
         return $content;
     }
 
-    /* Method to handle plugin activation. */
-    public function plugin_install() {
-        $schedule_db_version = intval(get_option(Schedule::DB_OPTION_NAME));
-
-        if (Schedule::DB_VERSION !== $schedule_db_version) {
-            Schedule::update_table();
-        }
-    }
-
-    /* Method to create database table. */
-    public function update_table() {
-        global $wpdb;
-
-        $table = $wpdb->prefix . 'schedule';
-        $table_sql = "
-            CREATE TABLE $table (
-                gametime datetime NOT NULL,
-                team varchar(64) NOT NULL,
-                opponent varchar(64) NOT NULL,
-                home boolean NOT NULL,
-                tv varchar(256) NOT NULL,
-                KEY ${table}_team_idx (team)
-            );
-        ";
-
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-        dbDelta($table_sql);
-
-        update_option(Schedule::DB_OPTION_NAME, Schedule::DB_VERSION);
-    }
-
     public function plugin_remove() {
-        global $wpdb;
-
-        $table = $wpdb->prefix . 'schedule';
-        $wpdb->query("DROP TABLE IF EXISTS $table");
-        delete_option(Schedule::DB_OPTION_NAME);
+        delete_option(Schedule::OPTION_NAME);
     }
 }
 
 add_action('widgets_init', create_function('', 'return register_widget("WGOM\\Schedule");'));
 
-register_activation_hook(__FILE__, 'WGOM\\Schedule::plugin_install');
 register_deactivation_hook(__FILE__, 'WGOM\\Schedule::plugin_remove');
 
 ?>

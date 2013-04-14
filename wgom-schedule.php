@@ -86,7 +86,7 @@ class Schedule extends \WP_Widget {
     // Find all games from today onward, with a max limit of five games.
     private function generate($instance) {
         $schedule = $instance['schedule'];
-        $content = '<ul>\n';
+        $content = "<ul>\n";
         $found = 0;
         // Number of games in the schedule to show.
         $limit = 5;

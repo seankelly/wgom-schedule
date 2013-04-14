@@ -142,6 +142,16 @@ class Schedule extends \WP_Widget {
     }
 
     private function reverse_schedule($schedule) {
+        $csv = '';
+        foreach ($schedule as &$game) {
+            $time = strftime('%F,%I:%M %p', $game[0]);
+            $opponent = $game[1];
+            $home = $game[2];
+            $tv = $game[3];
+            $csv .= "$time,$opponent,$home,$tv\n";
+        }
+
+        return $csv;
     }
 
     public function plugin_remove() {

@@ -98,9 +98,13 @@ class Schedule extends \WP_Widget {
 
             $date = getdate($game[0]);
             $gamedate = $date['mon'] . '/' . $date['mday'];
-            $gametime = $date['hours'] . ':' . $date['minutes'];
-            $opponent = $game[2];
-            $tv = $game[4];
+            $gametime = trim(strftime('%l:%M', $game[0]));
+            $opponent = $game[1];
+            // If it's a home game, bold the opponent.
+            if ($game[2]) {
+                $opponent = "<strong>$opponent</strong>";
+            }
+            $tv = $game[3];
             $content .= "<li>$gamedate $opponent ($gametime) $tv</li>";
 
             $limit++;

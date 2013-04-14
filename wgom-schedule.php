@@ -29,6 +29,7 @@ class Schedule extends \WP_Widget {
         );
 
         $instance = wp_parse_args((array) $instance, $defaults);
+        $csv_schedule = $this->reverse_schedule($instance['schedule']);
 ?>
 <p>
     <label for="<?php echo $this->get_field_id('title'); ?>">Title</label>
@@ -38,7 +39,7 @@ class Schedule extends \WP_Widget {
     <label for="<?php echo $this->get_field_id('team'); ?>">Title</label>
     <input id="<?php echo $this->get_field_id('team'); ?>" class="widefat" name="<?php echo $this->get_field_name('team'); ?>" value="<?php echo $instance['team']; ?>" />
 </p>
-<textarea id="<?php echo $this->get_field_id('schedule'); ?>" name="<?php echo $this->get_field_name('schedule'); ?>" class="widefat" cols="15" rows="20"><?php echo esc_textarea($instance['schedule']); ?></textarea>
+<textarea id="<?php echo $this->get_field_id('schedule'); ?>" name="<?php echo $this->get_field_name('schedule'); ?>" class="widefat" cols="15" rows="20"><?php echo esc_textarea($csv_schedule); ?></textarea>
 <?php
     }
 
@@ -138,6 +139,9 @@ class Schedule extends \WP_Widget {
 
             $schedule[] = array($gametime, $opponent, $home, $tv);
         }
+    }
+
+    private function reverse_schedule($schedule) {
     }
 
     public function plugin_remove() {

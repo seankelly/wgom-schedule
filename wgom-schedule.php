@@ -139,6 +139,8 @@ class Schedule extends \WP_Widget {
 
             $schedule[] = array($gametime, $opponent, $home, $tv);
         }
+
+        return $schedule;
     }
 
     private function reverse_schedule($schedule) {

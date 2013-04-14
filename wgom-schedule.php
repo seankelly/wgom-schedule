@@ -134,7 +134,15 @@ class Schedule extends \WP_Widget {
             $gametime = strtotime($fields[0] . ' ' . $time);
 
             $opponent = $fields[2];
-            $home = (bool) $fields[3];
+            if ($fields[3] === 'H') {
+                $home = true;
+            }
+            else if ($fields[3] === 'A') {
+                $home = false;
+            }
+            else {
+                $home = (bool) $fields[3];
+            }
             $tv = $fields[4];
 
             $schedule[] = array($gametime, $opponent, $home, $tv);
@@ -152,7 +160,7 @@ class Schedule extends \WP_Widget {
         foreach ($schedule as &$game) {
             $time = strftime('%F,%I:%M %p', $game[0]);
             $opponent = $game[1];
-            $home = $game[2];
+            $home = $game[2] ? 'H' : 'A';
             $tv = $game[3];
             $csv .= "$time,$opponent,$home,$tv\n";
         }

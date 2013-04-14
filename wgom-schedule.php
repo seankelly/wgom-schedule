@@ -107,7 +107,10 @@ class Schedule extends \WP_Widget {
             $tv = $game[3];
             $content .= "<li>$gamedate $opponent ($gametime) $tv</li>";
 
-            $limit++;
+            $found++;
+            if ($found >= $limit) {
+                break;
+            }
         }
 
         $content .= "\n</ul>";

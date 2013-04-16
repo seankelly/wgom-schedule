@@ -85,6 +85,8 @@ class Schedule extends \WP_Widget {
 
     // Find all games from today onward, with a max limit of five games.
     private function generate($instance) {
+        $timezone = date_default_timezone_get();
+        date_default_timezone_set('America/Chicago');
         $schedule = $instance['schedule'];
         $content = "<ul>\n";
         $found = 0;
@@ -112,12 +114,15 @@ class Schedule extends \WP_Widget {
                 break;
             }
         }
+        date_default_timezone_set($timezone);
 
         $content .= "\n</ul>";
         return $content;
     }
 
     private function parse_schedule($csv_schedule) {
+        $timezone = date_default_timezone_get();
+        date_default_timezone_set('America/Chicago');
         $schedule = array();
 
         /*
@@ -155,6 +160,7 @@ class Schedule extends \WP_Widget {
 
             $schedule[] = array($gametime, $opponent, $home, $tv);
         }
+        date_default_timezone_set($timezone);
 
         return $schedule;
     }
@@ -165,6 +171,8 @@ class Schedule extends \WP_Widget {
             return $csv;
         }
 
+        $timezone = date_default_timezone_get();
+        date_default_timezone_set('America/Chicago');
         foreach ($schedule as &$game) {
             $time = strftime('%F,%I:%M %p', $game[0]);
             $opponent = $game[1];
@@ -172,6 +180,7 @@ class Schedule extends \WP_Widget {
             $tv = $game[3];
             $csv .= "$time,$opponent,$home,$tv\n";
         }
+        date_default_timezone_set($timezone);
 
         return $csv;
     }

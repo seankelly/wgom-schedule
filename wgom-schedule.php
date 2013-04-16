@@ -10,8 +10,6 @@ Author URI:
 namespace WGOM;
 
 class Schedule extends \WP_Widget {
-    const OPTION_NAME = 'wgom_schedule';
-
     public function __construct() {
         $widget_ops = array(
             'classname' => 'WGOM Schedule',
@@ -45,7 +43,7 @@ class Schedule extends \WP_Widget {
 
     public function update($new_instance, $old_instance) {
         $instance = $old_instance;
-        $options = get_option(Schedule::OPTION_NAME, array());
+        $options = get_option($this->id, array());
 
         $team = strip_tags($new_instance['team']);
         if ($team === '')
@@ -65,7 +63,7 @@ class Schedule extends \WP_Widget {
             'schedule' => $schedule
         );
 
-        update_option(Schedule::OPTION_NAME, $options);
+        update_option($this->id, $options);
 
         return $instance;
     }
@@ -185,14 +183,8 @@ class Schedule extends \WP_Widget {
 
         return $csv;
     }
-
-    public function plugin_remove() {
-        delete_option(Schedule::OPTION_NAME);
-    }
 }
 
 add_action('widgets_init', create_function('', 'return register_widget("WGOM\\Schedule");'));
-
-register_deactivation_hook(__FILE__, 'WGOM\\Schedule::plugin_remove');
 
 ?>

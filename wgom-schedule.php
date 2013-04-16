@@ -20,6 +20,16 @@ class Schedule extends \WP_Widget {
         parent::__construct('wgom-schedule', 'WGOM Schedule', $widget_ops, $control_ops);
     }
 
+    public function __destruct() {
+        if (isset($_POST['delete_widget']) && isset($_POST['the-widget-id'])) {
+            $deleteid = $_POST['the-widget-id'];
+            // Check if I am being deleted.
+            if ($deleteid === $this->id) {
+                delete_option($this->id);
+            }
+        }
+    }
+
     public function form($instance) {
         $defaults = array(
             'title' => 'Team Schedule',

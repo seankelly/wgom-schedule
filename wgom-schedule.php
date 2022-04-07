@@ -47,6 +47,7 @@ class Schedule extends \WP_Widget {
     <label for="<?php echo $this->get_field_id('team'); ?>">Team</label>
     <input id="<?php echo $this->get_field_id('team'); ?>" class="widefat" name="<?php echo $this->get_field_name('team'); ?>" value="<?php echo $instance['team']; ?>" />
 </p>
+    <label for="<?php echo $this->get_field_id('schedule'); ?>">Schedule.<br>Input format: YYYY-MM-DD,HH:MM,Opponent,Home,TV channels</label>
 <textarea id="<?php echo $this->get_field_id('schedule'); ?>" name="<?php echo $this->get_field_name('schedule'); ?>" class="widefat" cols="15" rows="20"><?php echo esc_textarea($csv_schedule); ?></textarea>
 <?php
     }

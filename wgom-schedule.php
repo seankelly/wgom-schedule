@@ -61,8 +61,16 @@ class Schedule extends \WP_Widget {
             return;
 
         $title = strip_tags($new_instance['title']);
-        $csv_schedule = strip_tags($new_instance['schedule']);
-        $schedule = $this->parse_schedule($csv_schedule);
+        if (gettype($new_instance['schedule']) === 'string') {
+            $csv_schedule = strip_tags($new_instance['schedule']);
+            $schedule = $this->parse_schedule($csv_schedule);
+        }
+        elseif (gettype($new_instance['schedule']) === 'array') {
+            $schedule = $new_instance['schedule'];
+        }
+        else {
+            $schedule = array();
+        }
 
         $instance['title'] = $title;
         $instance['team'] = $team;

@@ -10,6 +10,9 @@ Author URI:
 namespace WGOM;
 
 class Schedule extends \WP_Widget {
+	// Number of games in the schedule to show.
+	private $limit = 5;
+
 	public function __construct() {
 		$widget_ops = array(
 		'classname' => 'WGOM Schedule',
@@ -107,8 +110,6 @@ class Schedule extends \WP_Widget {
 		$schedule = $instance['schedule'];
 		$content = "<ul>\n";
 		$found = 0;
-		// Number of games in the schedule to show.
-		$limit = 5;
 		$today = mktime(0, 0, 0);
 		foreach ($schedule as $game) {
 			if ($today > $game[0]) {
@@ -128,7 +129,7 @@ class Schedule extends \WP_Widget {
 			$content .= "<li>$gamedate $opponent ($gametime) $tv</li>";
 
 			$found++;
-			if ($found >= $limit) {
+			if ($found >= $this->limit) {
 				break;
 			}
 		}

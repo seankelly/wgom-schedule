@@ -13,6 +13,10 @@ class Schedule extends \WP_Widget {
 	// Number of games in the schedule to show.
 	private $limit = 5;
 
+	// Time zone to use for the date functions. The host may be in a
+	// different time zone so this needs to be used to correctly localize.
+	private $timezone = 'America/Chicago';
+
 	public function __construct() {
 		$widget_ops = array(
 		'classname' => 'WGOM Schedule',
@@ -106,7 +110,7 @@ class Schedule extends \WP_Widget {
 	// Find all games from today onward, with a max limit of five games.
 	private function generate($instance) {
 		$timezone = date_default_timezone_get();
-		date_default_timezone_set('America/Chicago');
+		date_default_timezone_set($this->timezone);
 		$schedule = $instance['schedule'];
 		$content = "<ul>\n";
 		$found = 0;
@@ -141,7 +145,7 @@ class Schedule extends \WP_Widget {
 
 	private function parse_schedule($csv_schedule) {
 		$timezone = date_default_timezone_get();
-		date_default_timezone_set('America/Chicago');
+		date_default_timezone_set($this->timezone);
 		$schedule = array();
 
 		/*

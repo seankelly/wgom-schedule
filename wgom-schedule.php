@@ -155,13 +155,7 @@ class Schedule extends \WP_Widget {
             }
 
             $fields = str_getcsv($row);
-            // Check if the time ends with AM or PM. Append PM to the time if
-            // nothing is found.
             $time = trim(strtoupper($fields[1]));
-            $ending = substr($time, -2);
-            if ($ending != 'AM' && $ending != 'PM') {
-                $time .= ' PM';
-            }
             $gametime = strtotime($fields[0] . ' ' . $time);
 
             $opponent = $fields[2];
@@ -192,7 +186,7 @@ class Schedule extends \WP_Widget {
         $timezone = date_default_timezone_get();
         date_default_timezone_set('America/Chicago');
         foreach ($schedule as &$game) {
-            $time = strftime('%F,%I:%M %p', $game[0]);
+            $time = strftime('%F,%H:%M', $game[0]);
             $opponent = $game[1];
             $home = $game[2] ? 'H' : 'A';
             $tv = $game[3];

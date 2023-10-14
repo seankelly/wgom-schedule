@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin name: WGOM Schedule
-Version: 0.1
+Version: 0.2
 Description: Plugin for managing sport schedules.
 Author: sean
 Author URI:

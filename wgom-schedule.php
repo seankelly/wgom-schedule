@@ -39,8 +39,9 @@ class Schedule extends \WP_Widget {
 
 	public function form($instance) {
 		$defaults = array(
-		'title' => 'Team Schedule',
-		'schedule' => ''
+			'title' => 'Team Schedule',
+			'team' => 'Team',
+			'schedule' => '',
 		);
 
 		$instance = wp_parse_args((array) $instance, $defaults);

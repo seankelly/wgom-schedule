@@ -19,8 +19,8 @@ class Schedule extends \WP_Widget {
 
 	public function __construct() {
 		$widget_ops = array(
-		'classname' => 'WGOM Schedule',
-		'description' => 'Handle team schedules'
+			'classname' => 'WGOM Schedule',
+			'description' => 'Handle team schedules'
 		);
 		$control_ops = array('width' => 350, 'height' => 450);
 
@@ -44,7 +44,7 @@ class Schedule extends \WP_Widget {
 			'schedule' => '',
 		);
 
-		$instance = wp_parse_args((array) $instance, $defaults);
+		$instance = wp_parse_args($instance, $defaults);
 		$csv_schedule = $this->reverse_schedule($instance['schedule']);
 ?>
 <p>
@@ -110,12 +110,11 @@ class Schedule extends \WP_Widget {
 
 	// Find all games from today onward, with a max limit of five games.
 	private function generate($instance) {
-		$timezone = date_default_timezone_get();
-		date_default_timezone_set($this->timezone);
-		$schedule = $instance['schedule'];
+		$formatter = new \IntlDateFormatter('en_US', timezone: $this->timezone, pattern: 'h:mm a');
 		$content = "<ul>\n";
 		$found = 0;
 		$today = mktime(0, 0, 0);
+		$schedule = $instance['schedule'];
 		foreach ($schedule as $game) {
 			if ($today > $game[0]) {
 				continue;
@@ -123,7 +122,7 @@ class Schedule extends \WP_Widget {
 
 			$date = getdate($game[0]);
 			$gamedate = $date['mon'] . '/' . $date['mday'];
-			$gametime = strftime('%l:%M %p', $game[0]);
+			$gametime = $formatter->format($game[0]);
 			$gametime = trim(str_replace('PM', '', $gametime));
 			$opponent = $game[1];
 			// If it's a home game, bold the opponent.
@@ -138,7 +137,6 @@ class Schedule extends \WP_Widget {
 				break;
 			}
 		}
-		date_default_timezone_set($timezone);
 
 		$content .= "\n</ul>";
 		return $content;
@@ -189,16 +187,14 @@ class Schedule extends \WP_Widget {
 			return $csv;
 		}
 
-		$timezone = date_default_timezone_get();
-		date_default_timezone_set('America/Chicago');
+		$formatter = new \IntlDateFormatter('en_US', timezone: $this->timezone, pattern: 'yyyy-MM-dd,kk:mm');
 		foreach ($schedule as &$game) {
-			$time = strftime('%F,%H:%M', $game[0]);
+			$time = $formatter->format($game[0]);
 			$opponent = $game[1];
 			$home = $game[2] ? 'H' : 'A';
 			$tv = $game[3];
 			$csv .= "$time,$opponent,$home,$tv\n";
 		}
-		date_default_timezone_set($timezone);
 
 		return $csv;
 	}

@@ -13,10 +13,6 @@ class Schedule extends \WP_Widget {
 	// Number of games in the schedule to show.
 	private $limit = 5;
 
-	// Time zone to use for the date functions. The host may be in a
-	// different time zone so this needs to be used to correctly localize.
-	private $timezone = 'America/Chicago';
-
 	public function __construct() {
 		$widget_ops = array(
 			'classname' => 'WGOM Schedule',
@@ -113,16 +109,19 @@ class Schedule extends \WP_Widget {
 
 	// Find all games from today onward, with a max limit of five games.
 	private function generate($instance) {
-		$formatter = new \IntlDateFormatter('en_US', timezone: $this->timezone, pattern: 'h:mm a');
+		$timezone = \wp_timezone();
+		$formatter = new \IntlDateFormatter('en_US', timezone: $timezone, pattern: 'h:mm a');
 		$content = "<ul>\n";
 		$found = 0;
-		$today = mktime(0, 0, 0);
+		$now = new \DateTimeImmutable('now', $timezone);
+		$today_dti = $now->setTime(0, 0, 0);
+		$timestamp = $today_dti->getTimestamp();
 		$schedule = [];
 		if (array_key_exists('schedule', $instance)) {
 			$schedule = $instance['schedule'];
 		}
 		foreach ($schedule as $game) {
-			if ($today > $game[0]) {
+			if ($timestamp > $game[0]) {
 				continue;
 			}
 
@@ -149,8 +148,7 @@ class Schedule extends \WP_Widget {
 	}
 
 	private function parse_schedule($csv_schedule) {
-		$timezone = date_default_timezone_get();
-		date_default_timezone_set($this->timezone);
+		$timezone = \wp_timezone();
 		$schedule = array();
 
 		/*
@@ -171,7 +169,7 @@ class Schedule extends \WP_Widget {
 				continue;
 			}
 			$time = trim(strtoupper($fields[1]));
-			$gametime = strtotime($fields[0] . ' ' . $time);
+			$gametime = \DateTimeImmutable::createFromFormat('Y-m-d H:i', $fields[0] . ' ' . $time, $timezone);
 
 			$opponent = $fields[2];
 			if ($fields[3] === 'H') {
@@ -185,9 +183,8 @@ class Schedule extends \WP_Widget {
 			}
 			$tv = $fields[4];
 
-			$schedule[] = array($gametime, $opponent, $home, $tv);
+			$schedule[] = array($gametime->getTimestamp(), $opponent, $home, $tv);
 		}
-		date_default_timezone_set($timezone);
 
 		return $schedule;
 	}
@@ -198,7 +195,8 @@ class Schedule extends \WP_Widget {
 			return $csv;
 		}
 
-		$formatter = new \IntlDateFormatter('en_US', timezone: $this->timezone, pattern: 'yyyy-MM-dd,kk:mm');
+		$timezone = \wp_timezone();
+		$formatter = new \IntlDateFormatter('en_US', timezone: $timezone, pattern: 'yyyy-MM-dd,kk:mm');
 		foreach ($schedule as &$game) {
 			$time = $formatter->format($game[0]);
 			$opponent = $game[1];

@@ -96,7 +96,10 @@ class Schedule extends \WP_Widget {
 	}
 
 	public function widget($args, $instance) {
-		$title = apply_filters('widget_title', $instance['title']);
+		$title = null;
+		if (array_key_exists('title', $instance)) {
+			$title = apply_filters('widget_title', $instance['title']);
+		}
 		$content = $this->generate($instance);
 
 		extract($args, EXTR_SKIP);
@@ -114,7 +117,10 @@ class Schedule extends \WP_Widget {
 		$content = "<ul>\n";
 		$found = 0;
 		$today = mktime(0, 0, 0);
-		$schedule = $instance['schedule'];
+		$schedule = [];
+		if (array_key_exists('schedule', $instance)) {
+			$schedule = $instance['schedule'];
+		}
 		foreach ($schedule as $game) {
 			if ($today > $game[0]) {
 				continue;
@@ -159,6 +165,11 @@ class Schedule extends \WP_Widget {
 			}
 
 			$fields = str_getcsv($row);
+			// This function will be called a lot so check the line
+			// is valid before parsing it.
+			if (count($fields) < 5) {
+				continue;
+			}
 			$time = trim(strtoupper($fields[1]));
 			$gametime = strtotime($fields[0] . ' ' . $time);
 

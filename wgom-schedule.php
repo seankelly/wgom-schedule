@@ -110,7 +110,9 @@ class Schedule extends \WP_Widget {
 	// Find all games from today onward, with a max limit of five games.
 	private function generate($instance) {
 		$timezone = \wp_timezone();
-		$formatter = new \IntlDateFormatter('en_US', timezone: $timezone, pattern: 'h:mm a');
+		// These have to be separate because text needs to appear between them.
+		$date_formatter = new \IntlDateFormatter('en_US', timezone: $timezone, pattern: 'M/d');
+		$time_formatter = new \IntlDateFormatter('en_US', timezone: $timezone, pattern: 'h:mm a');
 		$content = "<ul>\n";
 		$found = 0;
 		$now = new \DateTimeImmutable('now', $timezone);
@@ -125,9 +127,8 @@ class Schedule extends \WP_Widget {
 				continue;
 			}
 
-			$date = getdate($game[0]);
-			$gamedate = $date['mon'] . '/' . $date['mday'];
-			$gametime = $formatter->format($game[0]);
+			$gamedate = $date_formatter->format($game[0]);
+			$gametime = $time_formatter->format($game[0]);
 			$gametime = trim(str_replace('PM', '', $gametime));
 			$opponent = $game[1];
 			// If it's a home game, bold the opponent.
